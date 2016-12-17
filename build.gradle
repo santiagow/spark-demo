@@ -1,0 +1,79 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+  }
+}
+
+group = 'com.santiagow'
+version = '0.0.1-SNAPSHOT'
+
+apply plugin: 'scala'
+
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  jcenter()
+}
+
+dependencies {
+  compile 'org.scala-lang:scala-compiler:2.11.8'
+  compile 'org.scala-lang:scala-library:2.11.8'
+//  compileOnly 'org.scala-lang:jline:2.11.8'
+
+//  compile group: 'org.apache.spark', name: 'spark-core_2.11', version: '2.0.1'
+//  compile group: 'org.apache.spark', name: 'spark-sql_2.11', version: '2.0.1'
+//  compile group: 'org.apache.spark', name: 'spark-streaming_2.11', version: '2.0.1'
+//  compile group: 'org.apache.spark', name: 'spark-mllib_2.11', version: '2.0.1'
+
+  compileOnly group: 'org.apache.spark', name: 'spark-core_2.11', version: '2.0.1'
+  compileOnly group: 'org.apache.spark', name: 'spark-sql_2.11', version: '2.0.1'
+  compileOnly group: 'org.apache.spark', name: 'spark-streaming_2.11', version: '2.0.1'
+  compileOnly group: 'org.apache.spark', name: 'spark-mllib_2.11', version: '2.0.1'
+
+  compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
+
+  testCompile 'org.testng:testng:6.9.10'
+  testCompile 'org.scalatest:scalatest_2.11:3.0.0'
+  testRuntime 'org.scala-lang.modules:scala-xml_2.11:1.0.5'
+}
+
+//sourceCompatibility = 1.8
+//targetCompatibility = 1.8
+
+sourceSets.main.scala.srcDir "src/main/scala"
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+  manifest {
+    attributes 'Main-Class': 'com.santiago.spark.App'
+  }
+  baseName = project.name + '-all'
+  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+  with jar
+}
+
+task run(type: JavaExec, dependsOn: classes) {
+  main = 'Main'
+  classpath sourceSets.main.runtimeClasspath
+  classpath configurations.runtime
+}
+
+dependencies {
+  compile fileTree(dir:'lib',include:'*.jar')
+}
+
+task release(type: Copy,dependsOn: [clean,fatJar]) {
+  from('build/libs') {
+    include '*.jar'
+  }
+  into ('target')
+}
+
+// http://blog.csdn.net/birdsaction/article/details/42195769
+
+//apply plugin: 'fatjar'
