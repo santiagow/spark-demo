@@ -1,0 +1,7 @@
+db: #jdbc:mysql://localhost:3306/sampdb?user=test&password=test
+  host: localhost
+  port: 3306
+  dbName: sampdb
+  user: test
+  password: test
+
