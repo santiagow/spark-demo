@@ -5,21 +5,12 @@ import java.security.InvalidParameterException
 import java.util.regex.Pattern
 
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.sql.{SQLContext, SparkSession}
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 
 import scala.beans.BeanProperty
 
-object App {
-  val conf = new SparkConf().setAppName("spark_demo").setMaster("local")
-  val sc = new SparkContext(conf)
-
-  val spark: SparkSession = SparkSession.builder().config(conf).getOrCreate()
-  val sqlContext: SQLContext = spark.sqlContext
-  val baseDir: String = System.getProperty("user.dir")
-  var appArgs: AppArgs = _
-  val outputDir: String = baseDir + File.separator + "output"
+object App extends AppContext {
 
   def main(args: Array[String]): Unit = {
     if (args.length == 0) {
@@ -33,15 +24,10 @@ object App {
       System.setProperty("hadoop.home.dir", outputDir)
     }
 
-    //wordCount()
-    //piEstimat()
-    sql()
+    wordCount()
+    piEstimat()
   }
 
-  def loadConfig(confPath: String): Unit = {
-    val yaml = new Yaml(new Constructor(classOf[AppArgs]))
-    appArgs = yaml.load(new FileInputStream(confPath)).asInstanceOf[AppArgs]
-  }
 
   def wordCount(): Unit = {
     val classloader:ClassLoader = Thread.currentThread().getContextClassLoader()
@@ -74,33 +60,20 @@ object App {
     println("Pi is roughly " + 4.0 * count / NUM_SAMPLES)
   }
 
-  def sql(): Unit = {
-    val url = getJdbcUrl()
-    val df = sqlContext
-      .read
-      .format("jdbc")
-      .option("url", url)
-      .option("driver", "com.mysql.cj.jdbc.Driver")
-      .option("dbtable", "member")
-      .load()
+}
 
-    // Looks the schema of this DataFrame.
-    df.printSchema()
+trait AppContext {
+  val conf = new SparkConf().setAppName("spark_demo").setMaster("local")
+  val sc = new SparkContext(conf)
 
-    // Counts people by age
-    val countsByState = df.groupBy("state").count()
-    countsByState.show()
+  val baseDir: String = System.getProperty("user.dir")
+  var appArgs: AppArgs = _
+  val outputDir: String = baseDir + File.separator + "output"
 
-    // Saves countsByAge to S3 in the JSON format.
-//    val dataFrame = countsByState.write.format("json").save(outputDir + File.separator + "count_by_state.json")
-//    println(dataFrame)
+  def loadConfig(confPath: String): Unit = {
+    val yaml = new Yaml(new Constructor(classOf[AppArgs]))
+    appArgs = yaml.load(new FileInputStream(confPath)).asInstanceOf[AppArgs]
   }
-
-  def getJdbcUrl() : String = {
-    "jdbc:mysql://" + appArgs.db.host + ":" + appArgs.db.port + "/" +
-      appArgs.db.dbName + "?user=" + appArgs.db.user + "&password=" + appArgs.db.password
-  }
-
 }
 
 class AppArgs {

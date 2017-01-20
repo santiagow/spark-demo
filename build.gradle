@@ -30,15 +30,17 @@ configurations {
   compile.extendsFrom spark
 }
 
+def sparkVersion = '2.1.0'
+
 dependencies {
   compile 'org.scala-lang:scala-compiler:2.11.8'
   compile 'org.scala-lang:scala-library:2.11.8'
 
   // compileOnly like provided in maven
-  spark group: 'org.apache.spark', name: 'spark-core_2.11', version: '2.0.1'
-  spark group: 'org.apache.spark', name: 'spark-sql_2.11', version: '2.0.1'
-  spark group: 'org.apache.spark', name: 'spark-streaming_2.11', version: '2.0.1'
-  spark group: 'org.apache.spark', name: 'spark-mllib_2.11', version: '2.0.1'
+  spark group: 'org.apache.spark', name: 'spark-core_2.11', version: sparkVersion
+  spark group: 'org.apache.spark', name: 'spark-sql_2.11', version: sparkVersion
+  spark group: 'org.apache.spark', name: 'spark-streaming_2.11', version: sparkVersion
+  spark group: 'org.apache.spark', name: 'spark-mllib_2.11', version: sparkVersion
 
   compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
   compile group: 'org.yaml', name: 'snakeyaml', version: '1.17'
@@ -48,7 +50,8 @@ dependencies {
   testRuntime 'org.scala-lang.modules:scala-xml_2.11:1.0.5'
 
   // use local jar files
-  // compile fileTree(dir: 'lib', include: '*.jar')
+  //compile fileTree(dir: 'libs', include: '*.jar')
+  //compile files('libs/jedis-2.9.0.jar')
 }
 
 //sourceCompatibility = 1.8

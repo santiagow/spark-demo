@@ -1,0 +1,1 @@
+[{"metric":"cubrid.host.cpu.iowait","timestamp":1435548165,"value":93,"tags":{"service":"BTS","host":"dev-132","instance":"wangxi"}},{"metric":"cubrid.host.cpu.used","timestamp":1435548165,"value":62.5,"tags":{"service":"BTS","host":"dev-132","instance":"wangxi"}}]
