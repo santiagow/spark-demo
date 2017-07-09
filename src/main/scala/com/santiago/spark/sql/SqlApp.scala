@@ -1,7 +1,8 @@
-package com.santiago.spark
+package com.santiago.spark.sql
 
 import java.security.InvalidParameterException
 
+import com.santiago.spark.AppContext
 import org.apache.spark.sql._
 
 object SqlApp extends AppContext {

@@ -43,7 +43,9 @@ dependencies {
   spark group: 'org.apache.spark', name: 'spark-mllib_2.11', version: sparkVersion
 
   compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
+
   compile group: 'org.yaml', name: 'snakeyaml', version: '1.17'
+  compile group: 'com.alibaba', name: 'fastjson', version: '1.2.33'
 
   testCompile 'org.testng:testng:6.9.10'
   testCompile 'org.scalatest:scalatest_2.11:3.0.0'
