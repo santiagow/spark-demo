@@ -4,9 +4,6 @@ import java.security.InvalidParameterException
 
 import org.apache.spark.sql._
 
-/**
-  * @author Wang Xi <wangxi@navercorp.com>
-  */
 object SqlApp extends AppContext {
   // spark 2.1.0
   val spark: SparkSession = SparkSession.builder().config(conf).getOrCreate()
@@ -26,7 +23,7 @@ object SqlApp extends AppContext {
       System.setProperty("hadoop.home.dir", outputDir)
     }
 
-    mysql()
+    //mysql()
     json()
   }
 
